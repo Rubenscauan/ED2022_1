@@ -2,6 +2,8 @@
 #include <list>
 #include <sstream>
 
+//COPIADO DO GIT DOS CODIGOS, ENTENDI A LOGICA MAS NÃO CONSEGUI APLICAR
+
 using namespace std;
 
 struct State{
