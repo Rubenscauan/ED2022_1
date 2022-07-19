@@ -4,7 +4,7 @@
 
 using namespace std;
 
-void emborcar(stack<int>& gaveta, stack<int>& prateleira) {
+void preencher(stack<int>& gaveta, stack<int>& prateleira) {
     while (!gaveta.empty()) {
     prateleira.push(gaveta.top());
     gaveta.pop();
@@ -37,13 +37,13 @@ int main ()
             if (prateleira.size() != 0) {
                 prateleira.pop();
             } else {
-                emborcar(gaveta, prateleira);
+                preencher(gaveta, prateleira);
                 prateleira.pop();
             }
             q--;
         } else if(cmd == "3") {
             if (prateleira.empty()) {
-                emborcar(gaveta, prateleira);
+                preencher(gaveta, prateleira);
                 cout << "Quem esta no topo é o " << prateleira.top() << '\n';
             } else {
                 cout << "Quem esta no topo é o" << prateleira.top() << '\n';
