@@ -2,6 +2,9 @@
 #include <vector>
 using namespace std;
 
+//entendi a logica mas nao consegui fazer sozinho 
+
+
 void rotacao(vector<int>& vet, int rotacao){
         rotacao = rotacao % vet.size();
         vector<int> aux;
