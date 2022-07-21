@@ -1,4 +1,5 @@
 #include <iostream>
+NAO ENTENDI 
 
 bool pode_inserir(std::string &linha, int index, int valor, int proximidade) {
     for (int i = index + 1; i < index + 1 + proximidade; i++) {
