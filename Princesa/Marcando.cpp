@@ -1,30 +1,71 @@
 #include <iostream>
 #include <vector>
+#include <list>
+using namespace std;
 
-void show_vet(std::vector<int> vet, int sword) {
-    for (int i = 0; i < (int) vet.size(); i++)
-        std::cout << i << (i == sword? "> " : "  ");
-    std::cout << std::endl;
-}
 
-int achar_vivo(std::vector<int>& v, int pos) {
-    do {
-        pos = (pos + 1) % v.size();
-    } while(v[pos] == false);
-    return pos;
-}
-
-int main() {
-    int size {}, sword {};
-    std::cin >> size >> sword;
-    std::vector<int> vet(size, true);
-    sword -= 1;
-    int qtd = vet.size() - 1;
-    while(qtd--) {
-        show_vet(vet, sword);
-        sword = achar_vivo(vet, sword);
-        vet[sword] = false;
-        sword = achar_vivo(vet, sword);
-        vet.erase(vet.begin() + sword);
+vector<int> PreencherVetor(int tamanho,vector<int> &vetor){
+    for(int i = 0; i < tamanho;i++){
+        vetor.push_back(i);
     }
+    return vetor;
+}
+
+void apagarPosicao(int posicao,vector<int> &vetor){
+    for(int i = posicao; i < vetor.size();i++){
+        vetor[posicao] = vetor[posicao+1];
+        posicao++;
+    }
+    vetor.pop_back();
+}
+
+vector<bool> PreencherBool(int tamanho,vector<bool> & vetor){
+    for(int i = 0; i < tamanho;i++){
+        vetor.push_back(true);
+    }
+    return vetor;
+    
+}
+
+void printar(vector<int> vetor){
+    cout << "[";
+    for(int i = 0; i < vetor.size();i++){
+        if(i == vetor.size() - 1){
+            cout << vetor[i] << "]\n";
+            return;
+        }
+        cout << vetor[i] << ", ";
+    }
+}
+
+void princesa_puxando(int escolhido,vector<int> &vetor){
+    while(vetor.size() > 1){
+        vetor.erase(vetor.begin() + (escolhido + 1) % vetor.size());
+        escolhido = (escolhido + 1) % vetor.size();
+        printar(vetor);
+    }
+}
+
+void princesa_marcando(int escolhido,vector<int> &vetor){
+    vector<bool> aux;
+    PreencherBool(vetor.size(),aux);
+    for(int i = escolhido; vetor.size() > 1; i++){
+        if(aux[i+1] == true){
+            aux[i+1] = false;
+            apagarPosicao((escolhido+1)%vetor.size(),vetor);
+            
+            escolhido = (escolhido+1)%vetor.size();
+            printar(vetor);
+        }
+    }
+}
+
+
+int main()
+{
+    vector<int> vetor;
+    PreencherVetor(6,vetor);
+    princesa_marcando(0,vetor);
+    return 0;
+    
 }
