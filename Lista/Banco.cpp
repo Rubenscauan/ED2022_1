@@ -1,6 +1,7 @@
 #include <iostream>
 #include <list>
 #include <vector>
+#include <sstream>
 
 struct Cliente {
     std::string nome;
@@ -9,32 +10,33 @@ struct Cliente {
 
     Cliente(std::string nome, int docs, int paciencia) : nome(nome), docs(docs), paciencia(paciencia) {}
 
-    std::string str() {
-        return nome + ":" + std::to_string(docs) + ":" + std::to_string(paciencia); 
+    friend std::ostream& operator<<(std::ostream& os, const Cliente& c){
+    os << c.nome << ":" << c.docs << ":" << c.paciencia << " \n";
+    return os;
     }
+
 };
 
 class Banco {
 private:
     std::vector<Cliente*> caixas;
-    std::list<Cliente*> fila_entrada {};
-    std::list<Cliente*> fila_saida {};
-    int docs_received {0};
-    int docs_lost {0};
-    int tics {0};
-    int quantidade {0};
+    std::list<Cliente*> fila_entrada;
+    std::list<Cliente*> fila_saida;
+    int docs_received;
+    int docs_lost;
+    int tics;
+    int quantidade;
     
 public:
-    Banco(int caixas) : caixas(caixas){}
+    Banco(int caixas = 1) : caixas(caixas){}
 
-    void insere(Cliente *client) {
-        this->fila_entrada.push_back(client);
-        
-        ++quantidade;
+    void entrar(Cliente *cliente) {
+        fila_entrada.push_back(cliente);
+        quantidade++;
     }
 
-    bool vazio() {
-        return this->quantidade == 0;
+    void esvaziar_banco() {
+        this->quantidade = 0;
     }
 
 
@@ -43,14 +45,14 @@ public:
             for (auto it = fila_saida.begin(); it != fila_saida.end(); it++) {
                 this->docs_lost += (*it)->docs;
                 
-                auto backup = it;
+                auto aux= it;
                 
                 it = this->fila_saida.erase(it);
                 
-                delete *backup;
+                delete *aux;
             }
 
-            --quantidade;
+            quantidade--;
         }
 
 
@@ -94,22 +96,42 @@ public:
         ++tics;
     }
 
-    void show_all() {
-        for(auto &client : this->caixas) {
-            std::cout << "[" << (client == nullptr ? "" : client->str()) << "]";
+    friend std::ostream& operator<<(std::ostream& os, const Banco& b){
+        std::cout << "Caixas :" << std::endl;
+        std::cout << std::endl;
+        
+        for(auto &cliente : b.caixas) {
+            if(cliente == nullptr)
+                std::cout << ""<< std::endl;
+            else 
+                std::cout << cliente << std::endl;
         }
+        std::cout << std::endl;
+
+        std::cout << "Entrada :" << std::endl;
+        std::cout << std::endl;
         
-        std::cout << "\nin :{ ";
+        for(auto &cliente : b.fila_entrada){
+
+            if(cliente == nullptr)
+                std::cout << "" << std::endl;
+            else 
+                std::cout << cliente<< std::endl;
         
-        for(auto &client : this->fila_entrada)
-            std::cout << (client == nullptr ? "" : client->str()) << " ";
-        
-        std::cout << "}\nout:{ ";
-        
-        for(auto &client : this->fila_saida)
-            std::cout << (client == nullptr ? "" : client->str()) << " ";
-        
+        std::cout << std::endl;
+        }
+
+        std::cout << "Saida :" << std::endl;
+        std::cout << std::endl;
+        for(auto &cliente : b.fila_saida){
+            
+            if(cliente == nullptr)
+                std::cout << ""<< std::endl;
+            else 
+                std::cout << cliente<< std::endl;
         std::cout << "}\n";
+        }
+        return os;
     }
 
     int get_received() {
