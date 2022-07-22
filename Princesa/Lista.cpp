@@ -1,31 +1,40 @@
 #include <iostream>
 #include <list>
-#include <vector>
+
 using namespace std;
 
-void show_list(list<int>& l, list<int>::iterator& sword) {
-    for (auto it = l.begin(); it != l.end(); it++)
-        cout << *it << (it == sword? "> " : "  ");
-    cout << endl;
+void imprimir(list<int>& lista, list<int>::iterator& inicio) {
+    for (auto it = lista.begin(); it != lista.end(); ++it) {
+        cout << " " << *it;
+        if(it == inicio)
+            cout << ">";
+    } cout << endl;
+}   
+
+
+void lista_princesa(list<int> lista, int inicio) {
+    auto it = lista.begin();
+    advance(it, inicio - 1);
+
+    auto fix_loop = [&lista](auto it) {
+        return it == lista.end() ? lista.begin() : it;
+    };
+
+    while(lista.size() > 1){
+        imprimir(lista, it);
+        it = fix_loop(next(it, 1));
+        it = fix_loop(lista.erase(it));
+    }imprimir(lista, it);
 }
 
 int main() {
+    int  inicio {}, size {};
+    cout << "Digite o tamanho e o assassino:" << endl;
+    cin >> size  >> inicio;
+    list<int> lista;
 
-    int size {}, sword {};
-    cin >> size >> sword;
-    list<int> l;
-    for (int i = 0; i < size; i++)
-        l.push_back(i + 1);
-    auto it_sword = next(l.begin(), sword - 1);
+    for (int i {0}; i < size; i++)
+        lista.push_back(i+1);
 
-    auto fix_loop = [&l](auto it) {
-        return it == l.end() ? l.begin() : it;
-    };
-
-    while(l.size() > 1) {
-        show_list(l, it_sword);
-        it_sword = fix_loop(next(it_sword, 1));
-        it_sword = fix_loop(l.erase(it_sword));
-    }
-    show_list(l, it_sword);
+    lista_princesa(lista, inicio);
 }
